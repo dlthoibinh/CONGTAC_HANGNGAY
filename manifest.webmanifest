@@ -1,7 +1,7 @@
 {
   "name": "CT HẰNG NGÀY TKD TB",
-  "short_name": "CT TKD TB",
-  "description": "PWA shell cho biểu mẫu công tác hằng ngày TKD TB – hỗ trợ offline, cài lên màn hình chính.",
+  "short_name": "CT TKD",
+  "description": "PWA shell nhúng Apps Script cho Công tác hằng ngày TKD TB.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
