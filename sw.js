@@ -1,11 +1,5 @@
-/* EVN-SPC – CT HẰNG NGÀY TKD TB (PWA)
- * Strategy:
- *  - navigate: network-first with offline fallback
- *  - static assets: cache-first
- *  - works on GitHub Pages subpath thanks to BASE
- */
-const BASE = new URL('./', self.location).pathname;   // ví dụ '/ten-repo/' hoặc '/'
-const CACHE = 'ct-tkdtb-v2';
+const BASE = new URL('./', self.location).pathname;
+const CACHE = 'toadokh-pwa-v1';
 const STATIC_ASSETS = [
   BASE,
   BASE + 'index.html',
@@ -14,25 +8,20 @@ const STATIC_ASSETS = [
   BASE + 'icon-512-any.png',
   BASE + 'icon-192-maskable.png',
   BASE + 'icon-512-maskable.png',
-  BASE + 'apple-touch-icon-180.png',
   BASE + 'evn_logo.png'
 ];
-
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(STATIC_ASSETS)));
   self.skipWaiting();
 });
-
 self.addEventListener('activate', (e) => {
-  e.waitUntil(
-    caches.keys().then(keys => Promise.all(keys.map(k => k !== CACHE ? caches.delete(k) : 0)))
-  );
+  e.waitUntil(caches.keys().then(keys => Promise.all(keys.map(k => k !== CACHE ? caches.delete(k) : 0))));
   self.clients.claim();
 });
-
 self.addEventListener('fetch', (e) => {
   const req = e.request;
   const url = new URL(req.url);
+  // Only handle same-origin requests
   if (url.origin !== self.location.origin || !url.pathname.startsWith(BASE)) return;
 
   if (req.mode === 'navigate') {
@@ -49,7 +38,6 @@ self.addEventListener('fetch', (e) => {
     })());
     return;
   }
-
   e.respondWith((async () => {
     const cache = await caches.open(CACHE);
     const cached = await cache.match(req, { ignoreVary: true });
@@ -58,8 +46,4 @@ self.addEventListener('fetch', (e) => {
     if (res.ok && req.method === 'GET') cache.put(req, res.clone());
     return res;
   })());
-});
-
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
