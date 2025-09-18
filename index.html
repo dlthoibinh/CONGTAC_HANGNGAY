@@ -1,124 +1,79 @@
 <!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>CT HẰNG NGÀY TKD TB</title>
-  <meta name="theme-color" content="#1976D2" />
-  <link rel="manifest" href="./manifest.webmanifest" />
-  <link rel="icon" href="./icon-192-any.png" sizes="192x192" />
-  <link rel="apple-touch-icon" href="./icon-192-any.png" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>CT Hằng Ngày TKD</title>
+
+  <!-- Manifest & PWA -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#1976D2">
+  <link rel="apple-touch-icon" href="evn_logo.png">
+  <link rel="canonical" href="https://script.google.com/macros/s/AKfycbyDrzDPXv6sDOCNWZEZrlY4JnDWodu7T6W0dXN4CaWR/dev">
+
+  <!-- iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- CSP: chỉ cho nguồn cần thiết -->
+  <meta http-equiv="Content-Security-Policy"
+        content="
+          default-src 'self';
+          frame-src https://script.google.com https://*.googleusercontent.com;
+          connect-src 'self' https://script.google.com https://*.googleusercontent.com;
+          img-src 'self' data: https:;
+          style-src 'self' 'unsafe-inline';
+          script-src 'self';
+          base-uri 'self';
+          form-action 'none';
+          block-all-mixed-content;
+        ">
+
   <style>
-    :root{--bg:#0b1220;--card:#111827;--text:#e5e7eb;--muted:#9ca3af;--brand:#1976D2}
-    html,body{height:100%;margin:0;background:radial-gradient(1200px 700px at 30% -10%, #0f172a 0%, #0b1220 55%) fixed;color:var(--text);font-family:system-ui,Segoe UI,Roboto,Arial}
-    .wrap{min-height:100dvh;display:flex;flex-direction:column}
-    header{display:flex;gap:12px;align-items:center;padding:14px 16px;background:#0f172a;border-bottom:1px solid #1f2937;position:sticky;top:0;z-index:10}
-    header img{height:32px}
-    header h1{font-size:1.05rem;margin:0;font-weight:800;letter-spacing:.2px}
-    main{flex:1;display:grid;place-items:center;padding:18px}
-    .card{width:min(920px,100%);background:var(--card);border:1px solid #1f2937;border-radius:16px;box-shadow:0 8px 26px rgba(0,0,0,.18);padding:18px}
-    .row{display:grid;grid-template-columns:1fr;gap:14px}
-    @media (min-width: 900px){ .row{grid-template-columns:1.4fr .8fr} }
-    .btn{display:inline-flex;align-items:center;justify-content:center;height:46px;padding:0 16px;border-radius:12px;border:1px solid #2a3b57;background:#173156;color:#e5f2ff;font-weight:700;cursor:pointer}
-    .btn[disabled]{opacity:.6;cursor:not-allowed}
-    .muted{color:var(--muted);font-size:.9rem}
-    iframe{width:100%;height:70dvh;border:0;border-radius:12px;background:#0b1220}
-    footer{padding:14px 16px;color:#98a2b3;font-size:.85rem;text-align:center}
-    .pill{display:inline-block;padding:6px 10px;border:1px solid #2a3b57;border-radius:999px;background:#0f223f}
+    html,body{height:100%;margin:0;background:#f6f7fb;font-family:system-ui,Roboto,Arial}
+    .app{position:fixed;inset:0;display:flex;flex-direction:column}
+    #wrap{flex:1;position:relative}
+    iframe{position:absolute;inset:0;border:0;width:100%;height:100%}
+    .offline{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:#fff}
+    .offline.show{display:flex}
+    .offline button{padding:10px 14px;border-radius:999px;border:1px solid #e5e7eb;background:#fff;font-weight:800;cursor:pointer}
   </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <img src="./evn_logo.png" alt="EVN logo">
-    <h1>CT HẰNG NGÀY TKD TB — PWA</h1>
-  </header>
+  <div class="app">
+    <div id="wrap">
+      <!-- Bọc Apps Script bằng iframe -->
+      <iframe id="app"
+        src="https://script.google.com/macros/s/AKfycbyDrzDPXv6sDOCNWZEZrlY4JnDWodu7T6W0dXN4CaWR/dev"
+        allow="geolocation *; fullscreen *; camera *; microphone *; clipboard-read; clipboard-write; accelerometer; gyroscope; magnetometer"
+        referrerpolicy="no-referrer"></iframe>
 
-  <main>
-    <div class="card">
-      <div class="row">
-        <div>
-          <p class="muted">Nếu anh có <b>Apps Script Web App</b>, nhập URL vào ô dưới để nhúng chạy ngay trong PWA (tự nhớ lần sau). Nếu để trống, trang chỉ là shell PWA + cache offline.</p>
-          <div style="display:flex;gap:8px;margin:8px 0 14px">
-            <input id="url" class="pill" style="flex:1" placeholder="https://script.google.com/macros/s/AKfycbyDrzDPXv6sDOCNWZEZrlY4JnDWodu7T6W0dXN4CaWR/dev">
-            <button id="save" class="btn">Lưu URL</button>
-            <button id="clear" class="btn" title="Xóa URL đã lưu">Xóa</button>
-          </div>
-          <iframe id="appFrame" allow="geolocation; camera; microphone" referrerpolicy="no-referrer"></iframe>
-        </div>
-
-        <div>
-          <div style="display:flex;flex-direction:column;gap:10px">
-            <button id="installBtn" class="btn" disabled>Cài đặt PWA</button>
-            <button id="refreshBtn" class="btn">Làm mới (update SW)</button>
-            <div class="muted">Status: <span id="status">Đang sẵn sàng…</span></div>
-            <div class="muted">Tips:
-              <ul>
-                <li>GitHub Pages: bật <b>Pages → Deploy from branch</b>.</li>
-                <li>Repo con (ví dụ <code>/ten-repo/</code>) vẫn OK vì SW dùng <code>BASE</code> tự tính.</li>
-                <li>Icon đã có cả <i>any</i> + <i>maskable</i> để chuẩn “Add to Home Screen”.</li>
-              </ul>
-            </div>
-          </div>
+      <div id="offline" class="offline">
+        <div style="text-align:center">
+          <h2>Không có mạng</h2>
+          <p>Ứng dụng cần kết nối Internet để chạy.</p>
+          <button onclick="location.reload()">Thử lại</button>
         </div>
       </div>
-
     </div>
-  </main>
+  </div>
 
-  <footer>© EVN-SPC — Lâm đại ka</footer>
-</div>
+  <script>
+    // Tính BASE để SW đúng scope kể cả khi host ở subfolder
+    const BASE = (location.pathname.endsWith('/')
+      ? location.pathname
+      : location.pathname.replace(/\/[^/]*$/, '/'));
 
-<script>
-  // Load saved iframe URL (nếu có)
-  const urlInput = document.getElementById('url');
-  const frame = document.getElementById('appFrame');
-  const saved = localStorage.getItem('iframe_url');
-  if (saved) { urlInput.value = saved; frame.src = saved; }
-  document.getElementById('save').onclick = () => {
-    const v = urlInput.value.trim();
-    if (!/^https?:\/\//i.test(v)) { alert('URL không hợp lệ'); return; }
-    localStorage.setItem('iframe_url', v); frame.src = v;
-  };
-  document.getElementById('clear').onclick = () => { localStorage.removeItem('iframe_url'); urlInput.value=''; frame.removeAttribute('src'); };
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register(BASE + 'sw.js', { scope: BASE })
+        .then(r => console.log('SW registered:', r.scope))
+        .catch(e => console.warn('SW register failed:', e));
+    }
 
-  // PWA install
-  let deferredPrompt=null;
-  const installBtn=document.getElementById('installBtn');
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault(); deferredPrompt = e; installBtn.disabled=false;
-  });
-  installBtn.addEventListener('click', async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-    deferredPrompt=null; installBtn.disabled=true;
-  });
-
-  // SW register
-  const statusEl = document.getElementById('status');
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js', {scope:'./'}).then(reg => {
-      statusEl.textContent = 'SW registered.';
-      // Update flow
-      if (reg.waiting) { statusEl.textContent = 'Có phiên bản mới. Nhấn "Làm mới".'; }
-      reg.addEventListener('updatefound', () => {
-        const nw = reg.installing;
-        nw?.addEventListener('statechange', () => {
-          if (nw.state === 'installed' && navigator.serviceWorker.controller) {
-            statusEl.textContent = 'Đã tải bản mới. Nhấn "Làm mới".';
-          }
-        });
-      });
-      document.getElementById('refreshBtn').onclick = () => {
-        reg.waiting?.postMessage({type:'SKIP_WAITING'});
-        window.location.reload();
-      };
-      navigator.serviceWorker.addEventListener('controllerchange', () => window.location.reload());
-    }).catch(err => { statusEl.textContent = 'SW lỗi: '+err; });
-  } else {
-    statusEl.textContent = 'Trình duyệt không hỗ trợ Service Worker.';
-  }
-</script>
+    const setOfflineUI = on => document.getElementById('offline').classList.toggle('show', !!on);
+    addEventListener('online',  ()=>setOfflineUI(false));
+    addEventListener('offline', ()=>setOfflineUI(true));
+    setOfflineUI(!navigator.onLine);
+  </script>
 </body>
 </html>
