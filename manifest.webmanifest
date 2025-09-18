@@ -1,0 +1,16 @@
+{
+  "name": "CT HẰNG NGÀY TKD TB",
+  "short_name": "CT TKD TB",
+  "description": "PWA shell cho biểu mẫu công tác hằng ngày TKD TB – hỗ trợ offline, cài lên màn hình chính.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "theme_color": "#1976D2",
+  "background_color": "#0b1220",
+  "icons": [
+    { "src": "icon-192-any.png",      "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512-any.png",      "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
