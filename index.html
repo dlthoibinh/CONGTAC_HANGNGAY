@@ -17,13 +17,12 @@
   <link rel="icon" sizes="512x512" href="./icon-512-any.png">
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-180.png">
   <link rel="apple-touch-icon" href="./icon-192-any.png">
-  <link rel="canonical" href="https://script.google.com/macros/s/AKfycbzfe4uasCaBy3IpTrfk5odtOdvxx5z1vd6Nbc8tk89SANNbIRu9ijaRpU5LJolzeTeEFA/exec">
 
   <!-- iOS -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <!-- CSP: chỉ bật các nguồn thật sự cần -->
+  <!-- CSP -->
   <meta http-equiv="Content-Security-Policy"
         content="default-src 'self';
                  frame-src https://script.google.com https://*.googleusercontent.com;
@@ -47,6 +46,7 @@
     .offline{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:#fff}
     .offline.show{display:flex}
     .offline button{padding:10px 14px;border-radius:999px;border:1px solid #e5e7eb;background:#fff;font-weight:800;cursor:pointer}
+    #dbg{position:fixed;left:8px;bottom:8px;background:#111827;color:#d1d5db;border:1px solid #374151;border-radius:10px;padding:6px 10px;font:600 12px system-ui,-apple-system,Segoe UI,Roboto,Arial;opacity:.9}
   </style>
 </head>
 <body>
@@ -56,14 +56,12 @@
       <b>CT HẰNG NGÀY TKD TB — PWA</b>
     </header>
     <div id="wrap">
-      <!-- Nhúng Apps Script bằng iframe -->
       <iframe id="app"
         src="https://script.google.com/macros/s/AKfycbzfe4uasCaBy3IpTrfk5odtOdvxx5z1vd6Nbc8tk89SANNbIRu9ijaRpU5LJolzeTeEFA/exec"
         allow="geolocation *; fullscreen *; camera *; microphone *; clipboard-read; clipboard-write; accelerometer; gyroscope; magnetometer"
         referrerpolicy="no-referrer"
         sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-downloads">
       </iframe>
-
       <div id="offline" class="offline">
         <div style="text-align:center">
           <h2>Không có mạng</h2>
@@ -74,35 +72,25 @@
     </div>
   </div>
 
-  <script>
-    // Cho phép override nhanh bằng tham số ?app=URL (tự lưu)
-    const qs = new URLSearchParams(location.search);
-    const iframe = document.getElementById('app');
-    const override = qs.get('app');
-    if (override && /^https?:\/\//i.test(override)) {
-      iframe.src = override;
-      try { localStorage.setItem('iframe_url', override); } catch(e){}
-    } else {
-      // Nếu từng lưu, ưu tiên URL đã lưu
-      const saved = localStorage.getItem('iframe_url');
-      if (saved) iframe.src = saved;
-    }
-
-    // Tính BASE để SW đúng scope kể cả host ở subfolder (GitHub Pages)
-    const BASE = (location.pathname.endsWith('/')
-      ? location.pathname
-      : location.pathname.replace(/\/[^/]*$/, '/'));
-
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register(BASE + 'sw.js', { scope: BASE })
-        .then(r => console.log('SW registered:', r.scope))
-        .catch(e => console.warn('SW register failed:', e));
-    }
-
-    const setOfflineUI = on => document.getElementById('offline').classList.toggle('show', !!on);
-    addEventListener('online',  ()=>setOfflineUI(false));
-    addEventListener('offline', ()=>setOfflineUI(true));
-    setOfflineUI(!navigator.onLine);
+  <!-- Debug status -->
+  <div id="dbg">PWA: init…</div>
+  <script src="./app.js" defer></script>
+  <script defer>
+    // Tiny debug to verify SW + manifest status without breaking CSP
+    (async function(){
+      const dbg = document.getElementById('dbg');
+      let sw = 'no';
+      try {
+        sw = ('serviceWorker' in navigator) ? 'supported' : 'unsupported';
+      } catch(e){}
+      let mani = '??';
+      try {
+        const r = await fetch('./manifest.webmanifest', {cache:'no-store'});
+        mani = r.ok ? 'ok' : ('HTTP '+r.status);
+      } catch(e){ mani = 'fail'; }
+      dbg.textContent = `PWA: SW=${sw}, manifest=${mani}`;
+      setTimeout(()=>dbg.remove(), 6000);
+    })();
   </script>
 </body>
 </html>
