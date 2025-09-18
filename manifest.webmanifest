@@ -1,7 +1,7 @@
 {
-  "name": "Tọa Độ & Ảnh KH",
-  "short_name": "Tọa Độ KH",
-  "description": "Chụp ảnh & bấm tọa độ khách hàng – Tổ KD",
+  "name": "CT Hằng Ngày TKD",
+  "short_name": "CT Ngày",
+  "description": "CT Ngay – Tổ KD",
   "start_url": ".",
   "scope": ".",
   "display": "standalone",
